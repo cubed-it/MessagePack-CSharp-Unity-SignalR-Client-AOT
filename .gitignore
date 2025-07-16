@@ -26,60 +26,6 @@ Build/
 _UpgradeReport_Files/
 App_Data/
 
-# NuGet
-*.nupkg
-*.nuget/
-NuGet.Config
-.nuget/
-packages/
-
-# Rider
-.idea/
-*.iws
-*.iml
-*.ipr
-
-# StyleCop
-StyleCop.Cache
-
-# MSTest
-*.trx
-
-# Xunit
-*.xproj
-
-# DocFX
-_site/
-
-# Azure Web App publish files
-*.pubxml
-*.publishproj
-
-# Mac/Linux files
-.DS_Store
-.Trash/
-Thumbs.db
-
-# Misc
-*.config.backup
-*.config.user
-*.csdproj
-*.csproj.user
-*.dbmdl
-*.jfm
-*.licx
-*.mdf
-*.ldf
-*.orig
-*.psess
-*.vssscc
-*.vspscc
-*.vsp
-*.vspx
-*.usergroup
-*.testrunconfig
-*.ruleset
-
 # Node.js
 node_modules/
 npm-debug.log
@@ -89,14 +35,3 @@ npm-debug.log
 
 # Local machine specific files
 *.user.json
-
-# If you are using Docker
-Dockerfile.publish
-docker-compose.vs.debug.yml
-docker-compose.vs.release.yml
-
-# Compiled files for .NET Core
-project.lock.json
-project.fragment.lock.json
-*.runtimeconfig.dev.json
-*.json.user
