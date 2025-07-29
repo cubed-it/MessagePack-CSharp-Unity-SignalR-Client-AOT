@@ -100,7 +100,8 @@ public class SignalRClient : MonoBehaviour
     {
         var connection = new HubConnectionBuilder()
             .WithUrl(hubUrl)
-            .AddMessagePackProtocol()
+            .AddMessagePackProtocol(x => x.SerializerOptions = new MessagePackSerializerOptions(
+                CompositeResolver.Create(MyResolver.Instance, StandardResolver.Instance)))
             .Build();
 
         connection.Closed += (ex) =>
