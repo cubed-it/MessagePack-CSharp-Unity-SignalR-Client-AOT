@@ -1,39 +1,23 @@
 using Microsoft.AspNetCore.SignalR.Client;
+using Nerdbank.MessagePack;
 using Nerdbank.MessagePack.SignalR;
 using PolyType;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.UI;
 
 [GenerateShapeFor(typeof(object))]
 [GenerateShapeFor(typeof(SimpleDto))]
 partial class Witness { }
 
-public class SignalRClient : MonoBehaviour
+public class SignalRClient2
 {
-    [SerializeField] private InputField _inputField;
-    [SerializeField] private Button _sendButton;
-    [SerializeField] private Text _logText;
-
     private CancellationTokenSource _cts;
     private TaskCompletionSource<bool> _tcs;
 
-    private void Start()
+    public void Init()
     {
-        _inputField.text = "192.168.145.50:5005";
-
-        _sendButton.onClick.AddListener(() =>
-        {
-            if (Uri.IsWellFormedUriString($"http://{_inputField.text}", UriKind.Absolute))
-                SendMessage();
-        });
-
         try
         {
             var dto = new SimpleDto() { Value = "Test" };
-            Nerdbank.MessagePack.MessagePackSerializer serializer = new();
+            MessagePackSerializer serializer = new ();
             byte[] msgpack = serializer.Serialize(dto, Witness.ShapeProvider);
             var deserialized = serializer.Deserialize<SimpleDto>(msgpack, Witness.ShapeProvider);
             if (dto.Value == "Test")
@@ -48,13 +32,11 @@ public class SignalRClient : MonoBehaviour
         }
     }
 
-    public async void SendMessage()
+    public async Task SendMessage(string host)
     {
         await CancelSendMessage();
 
-        _logText.text = string.Empty;
-
-        var hubUrl = $"http://{_inputField.text}/myhub";
+        var hubUrl = $"http://{host}/myhub";
 
         var connection = CreateHubConnection(hubUrl);
         try
@@ -145,23 +127,23 @@ public class SignalRClient : MonoBehaviour
         _tcs = new TaskCompletionSource<bool>();
     }
 
-    private string LogTimePrefix => $"<color=#808080>{DateTime.Now:HH:mm:ss}  </color>";
+    private string LogTimePrefix => $"{DateTime.Now:HH:mm:ss} ";
 
     private void Log(string message)
     {
-        _logText.text += $"{LogTimePrefix}{message}\n";
-        Debug.Log(message);
+        Console.WriteLine($"{LogTimePrefix}{message}\n");
     }
 
     private void LogException(Exception ex)
     {
-        //_logText.text += $"{LogTimePrefix}<color=#D92626>Exception: {Regex.Replace(ex.ToString(), @"\p{C}", string.Empty)}</color>\n";
-        Debug.LogException(ex);
+        Console.WriteLine($"{LogTimePrefix}{ex}\n");
     }
 
     private void LogError(string message)
     {
-        _logText.text += $"{LogTimePrefix}<color=#D92626>Error: {message}</color>\n";
-        Debug.LogError(message);
+        var previousColor = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Red;
+        Console.WriteLine($"{LogTimePrefix}Error: {message}\n");
+        Console.ForegroundColor = previousColor;
     }
 }

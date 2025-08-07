@@ -1,7 +1,9 @@
-using Assets;
-using MessagePack;
-using MessagePack.Resolvers;
 using Microsoft.AspNetCore.SignalR;
+using Nerdbank.MessagePack.SignalR;
+using PolyType;
+
+[GenerateShapeFor(typeof(SimpleDto))]
+partial class Witness { }
 
 public class MyHub : Hub
 {
@@ -21,8 +23,7 @@ public class Program
                 webBuilder.ConfigureServices(services =>
                 {
                     services.AddSignalR()
-                        .AddMessagePackProtocol(options => options.SerializerOptions = new MessagePackSerializerOptions(
-                            CompositeResolver.Create(MyResolver.Instance, StandardResolver.Instance)));
+                        .AddMessagePackProtocol(Witness.ShapeProvider);
                 })
                 .UseUrls("http://*:5005")
                 .Configure(app =>
